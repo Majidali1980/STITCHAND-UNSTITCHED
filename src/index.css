@@ -95,3 +95,45 @@ nav::-webkit-scrollbar,
 .animate-shimmer {
   animation: shimmer 2s infinite linear;
 }
+
+/* Single-Page Order Receipt Print Optimization */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 6mm 8mm;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11px !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Hide everything on page during print except the printable invoice */
+  header,
+  footer,
+  nav,
+  .no-print,
+  #whatsapp-floating-btn,
+  .toast-container {
+    display: none !important;
+  }
+
+  #printable-invoice-page {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    page-break-inside: avoid !important;
+    page-break-after: avoid !important;
+    break-inside: avoid !important;
+  }
+}
+

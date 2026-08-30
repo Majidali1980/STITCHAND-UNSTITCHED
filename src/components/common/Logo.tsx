@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStore } from '../../context/StoreContext';
 
 interface LogoProps {
@@ -27,6 +27,10 @@ export const Logo: React.FC<LogoProps> = ({
   const storeName = customName || settings?.storeName || 'STITCH & UNSTITCHED';
   const tagline = customTagline !== undefined ? customTagline : (settings?.tagline || 'Karachi Atelier • Est. 2026');
   const logoUrl = customLogoUrl !== undefined ? customLogoUrl : (settings?.logoUrl || settings?.logo || '');
+
+  useEffect(() => {
+    setImgError(false);
+  }, [logoUrl, customLogoUrl, settings?.logo, settings?.logoUrl]);
 
   const sizeClasses = {
     sm: { icon: 'w-7 h-7', img: 'h-7 max-w-[120px]', text: 'text-base sm:text-lg', sub: 'text-[9px] tracking-[0.2em]' },

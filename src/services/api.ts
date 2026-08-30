@@ -14,6 +14,10 @@ import {
   FooterSection,
   FooterLink,
   Subscriber,
+  AboutUsConfig,
+  ContactUsConfig,
+  ContactInquiry,
+  CuratedSection,
 } from '../types';
 
 export const api = {
@@ -92,6 +96,31 @@ export const api = {
   async deleteCategory(id: string): Promise<boolean> {
     const res = await fetch(`/api/categories/${id}`, { method: 'DELETE' });
     return res.ok;
+  },
+
+  // Curated Merchandising Sections (Top Trends, Best Sellers)
+  async getCuratedSections(): Promise<CuratedSection[]> {
+    const res = await fetch('/api/curated-sections');
+    return res.json();
+  },
+
+  async getCuratedSection(id: string): Promise<CuratedSection> {
+    const res = await fetch(`/api/curated-sections/${id}`);
+    return res.json();
+  },
+
+  async updateCuratedSection(id: string, data: Partial<CuratedSection>): Promise<CuratedSection> {
+    const res = await fetch(`/api/curated-sections/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return res.json();
+  },
+
+  async getCuratedProducts(id: string): Promise<Product[]> {
+    const res = await fetch(`/api/curated-sections/${id}/products`);
+    return res.json();
   },
 
   // Orders
@@ -205,8 +234,17 @@ export const api = {
   },
 
   // Reviews
-  async getReviews(productId?: string): Promise<Review[]> {
-    const res = await fetch(`/api/reviews${productId ? `?productId=${productId}` : ''}`);
+  async getReviews(productId?: string, status?: string): Promise<Review[]> {
+    const params = new URLSearchParams();
+    if (productId) params.append('productId', productId);
+    if (status) params.append('status', status);
+    const query = params.toString() ? `?${params.toString()}` : '';
+    const res = await fetch(`/api/reviews${query}`);
+    return res.json();
+  },
+
+  async getProductReviews(idOrSlug: string): Promise<Review[]> {
+    const res = await fetch(`/api/products/${idOrSlug}/reviews`);
     return res.json();
   },
 
@@ -248,7 +286,64 @@ export const api = {
     return res.json();
   },
 
-  // CMS
+  // CMS About Us & Contact Us
+  async getAboutUsConfig(): Promise<AboutUsConfig> {
+    const res = await fetch('/api/about-us');
+    return res.json();
+  },
+
+  async updateAboutUsConfig(data: Partial<AboutUsConfig>): Promise<AboutUsConfig> {
+    const res = await fetch('/api/about-us', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return res.json();
+  },
+
+  async getContactUsConfig(): Promise<ContactUsConfig> {
+    const res = await fetch('/api/contact-us');
+    return res.json();
+  },
+
+  async updateContactUsConfig(data: Partial<ContactUsConfig>): Promise<ContactUsConfig> {
+    const res = await fetch('/api/contact-us', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return res.json();
+  },
+
+  async getContactInquiries(): Promise<ContactInquiry[]> {
+    const res = await fetch('/api/contact/inquiries');
+    return res.json();
+  },
+
+  async createContactInquiry(data: Partial<ContactInquiry>): Promise<ContactInquiry> {
+    const res = await fetch('/api/contact/inquiries', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return res.json();
+  },
+
+  async updateContactInquiry(id: string, data: Partial<ContactInquiry>): Promise<ContactInquiry> {
+    const res = await fetch(`/api/contact/inquiries/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return res.json();
+  },
+
+  async deleteContactInquiry(id: string): Promise<boolean> {
+    const res = await fetch(`/api/contact/inquiries/${id}`, { method: 'DELETE' });
+    return res.ok;
+  },
+
+  // CMS Generic Pages
   async getCMSPage(slug: string): Promise<CMSPage> {
     const res = await fetch(`/api/cms/${slug}`);
     return res.json();
@@ -292,6 +387,30 @@ export const api = {
     });
     const data = await res.json();
     return data.reply;
+  },
+
+  // AI Product Suggestion Details
+  async suggestProductDetails(data: {
+    name?: string;
+    category?: string;
+    fabric?: string;
+    color?: string;
+    gender?: string;
+    stitchType?: string;
+  }): Promise<{
+    description: string;
+    fabricCare: string;
+    metaTitle: string;
+    metaDescription: string;
+    tags: string[];
+    suggestedAlt: string;
+  }> {
+    const res = await fetch('/api/ai/suggest-product-details', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return res.json();
   },
 
   // Navigation (Navbar)

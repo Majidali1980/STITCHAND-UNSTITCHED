@@ -167,11 +167,13 @@ export const ProductDetailPage: React.FC = () => {
     try {
       const created = await api.createReview({
         productId: product.id,
-        author: newReviewAuthor.trim(),
-        city: newReviewCity.trim(),
+        customerName: newReviewAuthor.trim(),
+        customerEmail: newReviewCity.trim(),
         rating: newReviewRating,
+        title: `${product.name} Feedback`,
         comment: newReviewComment.trim(),
-        verifiedPurchase: true,
+        verified: true,
+        status: 'approved',
       });
 
       setReviews(prev => [created, ...prev]);
@@ -731,11 +733,15 @@ export const ProductDetailPage: React.FC = () => {
                   <div key={rev.id} className="p-4 bg-[#faf8f5] rounded-2xl border border-[#f0ece1] space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-xs text-[#1c1917]">{rev.author}</span>
-                        {rev.city && (
-                          <span className="text-[10px] text-[#78716c]">({rev.city})</span>
+                        <span className="font-bold text-xs text-[#1c1917]">
+                          {rev.customerName || (rev as any).author || 'Verified Customer'}
+                        </span>
+                        {(rev.customerEmail || (rev as any).city) && (
+                          <span className="text-[10px] text-[#78716c]">
+                            ({rev.customerEmail?.includes('@') ? 'Customer' : rev.customerEmail || (rev as any).city})
+                          </span>
                         )}
-                        {rev.verifiedPurchase && (
+                        {(rev.verified || (rev as any).verifiedPurchase) && (
                           <span className="bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded border border-emerald-200">
                             Verified Buyer
                           </span>
@@ -751,7 +757,9 @@ export const ProductDetailPage: React.FC = () => {
                       </div>
                     </div>
                     <p className="text-xs text-[#57534e] leading-relaxed">{rev.comment}</p>
-                    <span className="text-[10px] text-[#a8a29e] block">{rev.createdAt}</span>
+                    <span className="text-[10px] text-[#a8a29e] block">
+                      {new Date(rev.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </span>
                   </div>
                 ))
               )}

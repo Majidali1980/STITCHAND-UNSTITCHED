@@ -9,6 +9,11 @@ export interface ProductImage {
   order?: number;
 }
 
+export interface ProductColor {
+  name: string;
+  hex: string;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -18,9 +23,9 @@ export interface Product {
   shortDescription?: string;
   category: string;
   subcategory?: string;
-  gender: 'women' | 'men' | 'kids' | 'unisex' | 'both' | 'all';
+  gender: 'women' | 'men' | 'kids' | 'unisex' | 'both' | 'all' | string;
   brand: string;
-  fabric: string; // Lawn, Cotton, Linen, Khaddar, Silk, Chiffon, Velvet, Jacquard
+  fabric: string; // Lawn, Cotton, Linen, Khaddar, Silk, Chiffon, Velvet, Jacquard, etc.
   collection?: string; // Summer Lawn 2026, Festive Eid, Winter Khaddar, Ready-to-Wear
   season?: string;
   price: number; // PKR
@@ -29,7 +34,7 @@ export interface Product {
   stockQuantity: number;
   lowStockThreshold?: number;
   sizes: string[]; // XS, S, M, L, XL, Free Size, 2.5m, 3.0m
-  colors: { name: string; hex: string }[];
+  colors: ProductColor[];
   images: ProductImage[];
   tags?: string[];
   pieces: '1 Piece' | '2 Piece' | '3 Piece' | 'Unstitched Fabric' | string;
@@ -46,6 +51,9 @@ export interface Product {
   seoTitle?: string;
   seoDescription?: string;
   seoKeywords?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
   careInstructions?: string[] | string;
   fabricDetails?: string;
   includes?: string[];
@@ -59,6 +67,7 @@ export interface SubCategory {
   description?: string;
   productCount?: number;
   imageUrl?: string;
+  imageAlt?: string;
   sortOrder?: number;
 }
 
@@ -70,11 +79,71 @@ export interface Category {
   description?: string;
   image?: string;
   imageUrl?: string;
+  imageAlt?: string;
   productCount?: number;
   sortOrder?: number;
   isActive?: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
   subcategories?: string[];
   subCategoryItems?: SubCategory[];
+}
+
+export interface CuratedSection {
+  id: 'top-trends' | 'best-sellers' | string;
+  title: string;
+  subtitle: string;
+  badge?: string;
+  isActive: boolean;
+  productIds: string[];
+}
+
+export interface AboutUsConfig {
+  heroTitle: string;
+  heroSubtitle: string;
+  heroImage: string;
+  heroImageAlt?: string;
+  storyTitle: string;
+  storyParagraph1: string;
+  storyParagraph2: string;
+  storyImage: string;
+  storyImageAlt?: string;
+  craftsmanshipTitle: string;
+  craftsmanshipDescription: string;
+  craftsmanshipPoints: { title: string; description: string; icon?: string }[];
+  stats: { value: string; label: string }[];
+  seoTitle?: string;
+  seoDescription?: string;
+  ogImage?: string;
+  updatedAt?: string;
+}
+
+export interface ContactUsConfig {
+  pageTitle: string;
+  pageSubtitle: string;
+  phone: string;
+  whatsapp: string;
+  email: string;
+  address: string;
+  city: string;
+  googleMapsEmbedUrl: string;
+  businessHours: { days: string; hours: string }[];
+  socialLinks: { platform: string; url: string }[];
+  seoTitle?: string;
+  seoDescription?: string;
+  updatedAt?: string;
+}
+
+export interface ContactInquiry {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  subject: string;
+  message: string;
+  status: 'new' | 'read' | 'replied';
+  createdAt: string;
+  replyNotes?: string;
 }
 
 export interface Banner {
@@ -329,6 +398,9 @@ export interface StoreSettings {
   freeShippingThreshold: number;
   karachiShippingFee: number;
   nationwideShippingFee: number;
+  deliveryFee?: number;
+  shippingFee?: number;
+  customDeliveryAreas?: string[];
   facebookUrl: string;
   instagramUrl: string;
   tiktokUrl: string;

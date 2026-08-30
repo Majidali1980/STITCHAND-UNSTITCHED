@@ -15,7 +15,7 @@ import {
 import { useStore } from '../../context/StoreContext';
 import { api } from '../../services/api';
 
-const KARACHI_AREAS = [
+const DEFAULT_AREAS = [
   'DHA Phase 1',
   'DHA Phase 2',
   'DHA Phase 4',
@@ -35,35 +35,61 @@ const KARACHI_AREAS = [
   'Saddar / Saddar Cantt',
   'Malir Cantt & Model Colony',
   'Karachi Administration Society',
-  'Other Karachi Area',
+  'Scheme 33 & Gulshan-e-Maymar',
+  'Other / Custom Delivery Area',
 ];
 
 export const CheckoutPage: React.FC = () => {
   const {
     cart,
     subtotal,
-    shippingFee,
     appliedCoupon,
     couponDiscount,
-    total,
     clearCart,
     customer,
     settings,
+    calculateShippingFee,
     navigate,
     formatPrice,
     addToast,
   } = useStore();
 
+  const areaList = settings?.customDeliveryAreas && settings.customDeliveryAreas.length > 0 
+    ? settings.customDeliveryAreas 
+    : DEFAULT_AREAS;
+
   const [fullName, setFullName] = useState(customer?.name || 'Ayesha Siddiqui');
   const [email, setEmail] = useState(customer?.email || 'ayesha.siddiqui@gmail.com');
   const [phone, setPhone] = useState(customer?.phone || '+92 321 8472910');
   const [address, setAddress] = useState('Apartment 4B, Creek Vistas, Phase 8');
-  const [karachiArea, setKarachiArea] = useState('DHA Phase 8 (Creek Vistas / Zone)');
+  const [selectedArea, setSelectedArea] = useState('DHA Phase 8 (Creek Vistas / Zone)');
+  const [customAreaText, setCustomAreaText] = useState('');
+  const [isCustomArea, setIsCustomArea] = useState(false);
   const [city, setCity] = useState('Karachi');
   const [landmark, setLandmark] = useState('Near Creek Club');
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'bank_transfer'>('cod');
   const [orderNotes, setOrderNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  const effectiveDeliveryArea = isCustomArea && customAreaText.trim() 
+    ? customAreaText.trim() 
+    : (selectedArea === 'Other / Custom Delivery Area' && customAreaText.trim() ? customAreaText.trim() : selectedArea);
+
+  const isKarachi = (city || '').trim().toLowerCase().includes('karachi');
+  const freeShippingThreshold = settings?.freeShippingThreshold !== undefined ? Number(settings.freeShippingThreshold) : 3000;
+  const isFreeShipping = subtotal >= freeShippingThreshold;
+
+  const dynamicShippingFee = calculateShippingFee 
+    ? calculateShippingFee(subtotal, city) 
+    : (isFreeShipping || subtotal === 0 
+        ? 0 
+        : (isKarachi 
+            ? (settings?.karachiShippingFee !== undefined ? Number(settings.karachiShippingFee) : (settings?.shippingFee !== undefined ? Number(settings.shippingFee) : (settings?.deliveryFee !== undefined ? Number(settings.deliveryFee) : 150)))
+            : (settings?.nationwideShippingFee !== undefined ? Number(settings.nationwideShippingFee) : 250)
+          )
+      );
+
+  const dynamicTotal = Math.max(0, subtotal - couponDiscount + dynamicShippingFee);
 
   if (cart.length === 0) {
     navigate('shop');
@@ -92,9 +118,9 @@ export const CheckoutPage: React.FC = () => {
           fullName,
           phone,
           address,
-          area: karachiArea,
+          area: effectiveDeliveryArea || 'Karachi Central',
           city,
-          province: 'Sindh',
+          province: isKarachi ? 'Sindh' : 'Pakistan',
           postalCode: '75500',
           landmark,
         },
@@ -113,8 +139,8 @@ export const CheckoutPage: React.FC = () => {
         })),
         subtotal,
         discount: couponDiscount,
-        shippingFee,
-        total,
+        shippingFee: dynamicShippingFee,
+        total: dynamicTotal,
         paymentMethod: paymentMethod === 'cod' ? 'Cash on Delivery (COD)' : 'Direct Bank Transfer',
         paymentStatus: 'pending',
         couponCode: appliedCoupon?.code,
@@ -231,16 +257,54 @@ export const CheckoutPage: React.FC = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-bold text-[#292524] mb-1">Karachi Area / Sector *</label>
-                    <select
-                      value={karachiArea}
-                      onChange={e => setKarachiArea(e.target.value)}
-                      className="w-full bg-[#faf8f5] border border-[#d6cfc4] px-3.5 py-2.5 rounded-xl focus:outline-none focus:border-[#ea580c] font-semibold text-[#292524]"
-                    >
-                      {KARACHI_AREAS.map(area => (
-                        <option key={area} value={area}>{area}</option>
-                      ))}
-                    </select>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="font-bold text-[#292524]">
+                        {isKarachi ? 'Karachi Area / Sector *' : 'Delivery Area / Zone *'}
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsCustomArea(!isCustomArea);
+                          if (!isCustomArea && !customAreaText) {
+                            setCustomAreaText(selectedArea !== 'Other / Custom Delivery Area' ? selectedArea : '');
+                          }
+                        }}
+                        className="text-[11px] text-[#ea580c] hover:underline font-semibold"
+                      >
+                        {isCustomArea ? 'Select from List' : '+ Type Custom Area'}
+                      </button>
+                    </div>
+
+                    {!isCustomArea && selectedArea !== 'Other / Custom Delivery Area' ? (
+                      <select
+                        value={selectedArea}
+                        onChange={e => {
+                          setSelectedArea(e.target.value);
+                          if (e.target.value === 'Other / Custom Delivery Area') {
+                            setIsCustomArea(true);
+                          }
+                        }}
+                        className="w-full bg-[#faf8f5] border border-[#d6cfc4] px-3.5 py-2.5 rounded-xl focus:outline-none focus:border-[#ea580c] font-semibold text-[#292524]"
+                      >
+                        {areaList.map(area => (
+                          <option key={area} value={area}>{area}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <div className="space-y-1">
+                        <input
+                          type="text"
+                          required
+                          value={customAreaText}
+                          onChange={e => setCustomAreaText(e.target.value)}
+                          placeholder="e.g. DHA Phase 6 Block 5, Scheme 33, Sector 11-A..."
+                          className="w-full bg-[#faf8f5] border border-[#ea580c] px-3.5 py-2.5 rounded-xl focus:outline-none font-semibold text-[#292524]"
+                        />
+                        <span className="text-[10px] text-[#78716c] block">
+                          Custom area entered for precision doorstep courier dispatch.
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   <div>
@@ -409,15 +473,26 @@ export const CheckoutPage: React.FC = () => {
                     <span>-{formatPrice(couponDiscount)}</span>
                   </div>
                 )}
-                <div className="flex justify-between">
-                  <span>Karachi / Nationwide Shipping</span>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <span>Shipping &amp; Delivery</span>
+                    <span className="text-[10px] text-[#78716c] block">
+                      {isFreeShipping 
+                        ? `Free delivery unlocked (orders above ${formatPrice(freeShippingThreshold)})` 
+                        : (isKarachi ? 'Karachi Doorstep Rider Rate' : 'Nationwide Courier Rate')}
+                    </span>
+                  </div>
                   <span className="font-bold text-[#1c1917]">
-                    {shippingFee === 0 ? <span className="text-emerald-600">FREE</span> : formatPrice(shippingFee)}
+                    {dynamicShippingFee === 0 ? (
+                      <span className="text-emerald-600 font-bold">FREE</span>
+                    ) : (
+                      formatPrice(dynamicShippingFee)
+                    )}
                   </span>
                 </div>
                 <div className="flex justify-between text-base font-bold text-[#1c1917] pt-3 border-t border-[#f0ece1]">
                   <span>Total Due</span>
-                  <span className="font-cinzel text-2xl text-[#ea580c]">{formatPrice(total)}</span>
+                  <span className="font-cinzel text-2xl text-[#ea580c]">{formatPrice(dynamicTotal)}</span>
                 </div>
               </div>
 

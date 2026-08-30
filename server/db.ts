@@ -20,6 +20,10 @@ import {
   FooterSection,
   FooterConfig,
   Subscriber,
+  CuratedSection,
+  AboutUsConfig,
+  ContactUsConfig,
+  ContactInquiry,
 } from '../src/types';
 
 // High-quality Pakistani fashion photography URLs
@@ -1355,7 +1359,10 @@ By accessing or using this website, you agree to be bound by these terms. All pr
 const SEED_SETTINGS: StoreSettings = {
   storeName: 'STITCH & UNSTITCHED',
   tagline: 'Modern Pakistani Sartorial Luxury',
-  logo: '/logo.png',
+  logo: '',
+  logoUrl: '',
+  favicon: '',
+  faviconUrl: '',
   phone: '+92 21 35870000',
   whatsapp: '+92 300 1234567',
   email: 'care@stitchandunstitched.com',
@@ -1366,6 +1373,24 @@ const SEED_SETTINGS: StoreSettings = {
   freeShippingThreshold: 3000,
   karachiShippingFee: 150,
   nationwideShippingFee: 250,
+  deliveryFee: 150,
+  shippingFee: 150,
+  customDeliveryAreas: [
+    'DHA Phase 1 - 8 (All Sectors)',
+    'Clifton Blocks 1 - 9 & Sea View',
+    'Gulshan-e-Iqbal (Blocks 1 - 19)',
+    'Gulistan-e-Johar (Blocks 1 - 20)',
+    'PECHS Blocks 2, 3 & 6',
+    'Bahria Town Karachi (All Precincts)',
+    'North Nazimabad & Buffer Zone',
+    'Federal B Area & Nazimabad',
+    'KDA Scheme 1, Karsaz & Navy Housing',
+    'Saddar, Cantt & Civil Lines',
+    'Malir Cantt & Model Colony',
+    'Karachi Admin Society & Baloch Colony',
+    'Scheme 33 & Gulshan-e-Maymar',
+    'Custom Delivery Area (Enter Below)'
+  ],
   facebookUrl: 'https://facebook.com',
   instagramUrl: 'https://instagram.com',
   tiktokUrl: 'https://tiktok.com',
@@ -1466,8 +1491,111 @@ const SEED_FOOTER_CONFIG: FooterConfig = {
   ]
 };
 
-// In-Memory Database with optional JSON file backup
+const SEED_CURATED_SECTIONS: CuratedSection[] = [
+  {
+    id: 'top-trends',
+    title: 'Top Trends of the Season',
+    subtitle: 'Curated Pakistani summer lawn, festive chiffons & bespoke artisanal kurtas.',
+    badge: 'TRENDING ATELIER',
+    isActive: true,
+    productIds: ['prod-1', 'prod-2', 'prod-4', 'prod-6', 'prod-7', 'prod-8']
+  },
+  {
+    id: 'best-sellers',
+    title: 'Best Sellers in Karachi',
+    subtitle: 'Most coveted designs trending across Clifton, DHA & Gulshan wardrobes.',
+    badge: 'KARACHI FAVORITE',
+    isActive: true,
+    productIds: ['prod-1', 'prod-3', 'prod-5', 'prod-7', 'prod-2', 'prod-4']
+  }
+];
+
+const SEED_ABOUT_US: AboutUsConfig = {
+  heroTitle: 'CRAFTING TIMELESS SARTORIAL LUXURY',
+  heroSubtitle: 'From the heart of Karachi to wardrobes across the globe, Stitch & Unstitched redefines contemporary Pakistani couture.',
+  heroImage: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=1400&q=85',
+  heroImageAlt: 'Stitch & Unstitched Karachi Master Atelier',
+  storyTitle: 'Our Heritage & Philosophy',
+  storyParagraph1: 'Founded in Karachi, Pakistan, Stitch & Unstitched was born from a deep reverence for subcontinental textile heritage and the modern woman\'s desire for effortless elegance. We bridge centuries-old artisanal techniques—intricate zardozi, hand-guided tilla, delicate resham embroidery—with contemporary silhouettes designed for the discerning global Pakistani.',
+  storyParagraph2: 'Every collection starts with ethically sourced pure fibers: 100% Egyptian Giza and Pakistani Pima cotton, micro-velvet 9000, and featherlight pure silk chiffons. Whether you choose our ready-to-wear tailored ensembles or unstitched fabric to customize with our master tailors, we guarantee an experience of genuine sartorial refinement.',
+  storyImage: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1200&q=85',
+  storyImageAlt: 'Master artisans crafting hand-embroidered tilla work',
+  craftsmanshipTitle: 'The Karachi Master Craftsmanship',
+  craftsmanshipDescription: 'We believe true luxury lies in the details that often go unnoticed: French seams, hand-finished borders, and breathable weaves designed for our coastal climate.',
+  craftsmanshipPoints: [
+    {
+      title: '100% Authentic Pure Fibers',
+      description: 'Zero polyester blends in our premium lawn and cotton collections. Maximum breathability and colorfast vibrancy.',
+      icon: 'shield'
+    },
+    {
+      title: 'Master Tailoring & Custom Stitching',
+      description: 'Our Karachi atelier offers custom tailoring according to your exact body measurements, with doorstep delivery.',
+      icon: 'scissors'
+    },
+    {
+      title: 'Ethical Artisan Wages',
+      description: 'Supporting over 200 craftspeople and master embroiderers across Sindh and Punjab with dignified fair wages.',
+      icon: 'heart'
+    },
+    {
+      title: 'Express Karachi Dispatch',
+      description: 'Same-day and next-day express delivery across DHA, Clifton, Gulshan, PECHS, and all Karachi zones.',
+      icon: 'truck'
+    }
+  ],
+  stats: [
+    { value: '25,000+', label: 'Delighted Customers' },
+    { value: '100%', label: 'Pure Pima Lawn & Silk' },
+    { value: '24-48h', label: 'Express Karachi Dispatch' },
+    { value: '4.9/5', label: 'Verified Customer Rating' }
+  ],
+  seoTitle: 'About Us | Stitch & Unstitched | Luxury Pakistani Couture Karachi',
+  seoDescription: 'Learn about Stitch & Unstitched, Karachi\'s premier sartorial atelier for luxury lawn, festive chiffons, and bespoke tailoring.',
+  ogImage: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=1200&q=85'
+};
+
+const SEED_CONTACT_US: ContactUsConfig = {
+  pageTitle: 'CONNECT WITH OUR KARACHI CONCIERGE',
+  pageSubtitle: 'Visit our flagship atelier in Phase 6 DHA, or connect directly with our fashion consultants via WhatsApp.',
+  phone: '+92 21 35870000',
+  whatsapp: '+92 300 1234567',
+  email: 'care@stitchandunstitched.com',
+  address: 'Plot 24-C, Khayaban-e-Shahbaz, Phase 6, DHA',
+  city: 'Karachi, Sindh 75500, Pakistan',
+  googleMapsEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14486.299580797305!2d67.05436655!3d24.8100115!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33c5770000001%3A0x7d6f519391090547!2sKhayaban-e-Shahbaz%2C%20DHA%20Phase%206%2C%20Karachi!5e0!3m2!1sen!2s!4v1700000000000!5m2!1sen!2s',
+  businessHours: [
+    { days: 'Monday – Saturday', hours: '11:00 AM – 09:30 PM PKT' },
+    { days: 'Sunday', hours: '02:00 PM – 09:00 PM PKT' },
+    { days: 'WhatsApp Concierge', hours: '24/7 Priority Support' }
+  ],
+  socialLinks: [
+    { platform: 'Instagram', url: 'https://instagram.com' },
+    { platform: 'Facebook', url: 'https://facebook.com' },
+    { platform: 'TikTok', url: 'https://tiktok.com' },
+    { platform: 'YouTube', url: 'https://youtube.com' }
+  ],
+  seoTitle: 'Contact Us | Stitch & Unstitched Flagship Boutique Karachi',
+  seoDescription: 'Get in touch with Stitch & Unstitched. Visit our DHA Karachi boutique, chat on WhatsApp, or send a custom tailoring inquiry.'
+};
+
+const SEED_CONTACT_INQUIRIES: ContactInquiry[] = [
+  {
+    id: 'inq-1',
+    name: 'Rabia Tariq',
+    email: 'rabia.t@gmail.com',
+    phone: '+92 321 9081234',
+    subject: 'Custom Stitching Inquiry',
+    message: 'I would like to get 3 unstitched lawn suits stitched with organza laces for an upcoming wedding in Clifton. Can I share custom chest/waist measurements?',
+    status: 'new',
+    createdAt: new Date(Date.now() - 3 * 3600000).toISOString()
+  }
+];
+
+// Persistent File-backed Database Class
 class Database {
+  private dataFilePath = path.join(process.cwd(), 'data', 'store_db.json');
+
   products: Product[] = [...SEED_PRODUCTS];
   categories: Category[] = [...SEED_CATEGORIES];
   banners: Banner[] = [...SEED_BANNERS];
@@ -1483,6 +1611,87 @@ class Database {
   navItems: NavItem[] = [...SEED_NAV_ITEMS];
   footerConfig: FooterConfig = JSON.parse(JSON.stringify(SEED_FOOTER_CONFIG));
   subscribers: Subscriber[] = [...SEED_SUBSCRIBERS];
+  curatedSections: CuratedSection[] = [...SEED_CURATED_SECTIONS];
+  aboutUsConfig: AboutUsConfig = { ...SEED_ABOUT_US };
+  contactUsConfig: ContactUsConfig = { ...SEED_CONTACT_US };
+  contactInquiries: ContactInquiry[] = [...SEED_CONTACT_INQUIRIES];
+
+  constructor() {
+    this.initPersistence();
+  }
+
+  private initPersistence() {
+    try {
+      const dataDir = path.dirname(this.dataFilePath);
+      if (!fs.existsSync(dataDir)) {
+        fs.mkdirSync(dataDir, { recursive: true });
+      }
+
+      if (fs.existsSync(this.dataFilePath)) {
+        const raw = fs.readFileSync(this.dataFilePath, 'utf-8');
+        const parsed = JSON.parse(raw);
+        if (parsed) {
+          if (Array.isArray(parsed.products) && parsed.products.length > 0) this.products = parsed.products;
+          if (Array.isArray(parsed.categories) && parsed.categories.length > 0) this.categories = parsed.categories;
+          if (Array.isArray(parsed.banners) && parsed.banners.length > 0) this.banners = parsed.banners;
+          if (parsed.flashSale) this.flashSale = parsed.flashSale;
+          if (Array.isArray(parsed.orders)) this.orders = parsed.orders;
+          if (Array.isArray(parsed.customers)) this.customers = parsed.customers;
+          if (Array.isArray(parsed.coupons)) this.coupons = parsed.coupons;
+          if (Array.isArray(parsed.reviews)) this.reviews = parsed.reviews;
+          if (Array.isArray(parsed.inventoryLogs)) this.inventoryLogs = parsed.inventoryLogs;
+          if (Array.isArray(parsed.cmsPages)) this.cmsPages = parsed.cmsPages;
+          if (parsed.settings && parsed.settings.storeName) this.settings = parsed.settings;
+          if (parsed.homepageConfig) this.homepageConfig = parsed.homepageConfig;
+          if (Array.isArray(parsed.navItems) && parsed.navItems.length > 0) this.navItems = parsed.navItems;
+          if (parsed.footerConfig && parsed.footerConfig.sections) this.footerConfig = parsed.footerConfig;
+          if (Array.isArray(parsed.subscribers)) this.subscribers = parsed.subscribers;
+          if (Array.isArray(parsed.curatedSections) && parsed.curatedSections.length > 0) this.curatedSections = parsed.curatedSections;
+          if (parsed.aboutUsConfig) this.aboutUsConfig = parsed.aboutUsConfig;
+          if (parsed.contactUsConfig) this.contactUsConfig = parsed.contactUsConfig;
+          if (Array.isArray(parsed.contactInquiries)) this.contactInquiries = parsed.contactInquiries;
+          console.log('[DB] Loaded state successfully from persistent file:', this.dataFilePath);
+          return;
+        }
+      }
+      this.persist();
+    } catch (err) {
+      console.warn('[DB] Could not load from persistent file, initialized with SEED data:', err);
+    }
+  }
+
+  public persist() {
+    try {
+      const dataDir = path.dirname(this.dataFilePath);
+      if (!fs.existsSync(dataDir)) {
+        fs.mkdirSync(dataDir, { recursive: true });
+      }
+      const state = {
+        products: this.products,
+        categories: this.categories,
+        banners: this.banners,
+        flashSale: this.flashSale,
+        orders: this.orders,
+        customers: this.customers,
+        coupons: this.coupons,
+        reviews: this.reviews,
+        inventoryLogs: this.inventoryLogs,
+        cmsPages: this.cmsPages,
+        settings: this.settings,
+        homepageConfig: this.homepageConfig,
+        navItems: this.navItems,
+        footerConfig: this.footerConfig,
+        subscribers: this.subscribers,
+        curatedSections: this.curatedSections,
+        aboutUsConfig: this.aboutUsConfig,
+        contactUsConfig: this.contactUsConfig,
+        contactInquiries: this.contactInquiries
+      };
+      fs.writeFileSync(this.dataFilePath, JSON.stringify(state, null, 2), 'utf-8');
+    } catch (err) {
+      console.error('[DB] Failed to persist data to file:', err);
+    }
+  }
 
   // Products CRUD
   getProducts(query?: {
@@ -1617,15 +1826,24 @@ class Database {
   }
 
   createProduct(product: Omit<Product, 'id' | 'createdAt' | 'soldCount' | 'rating' | 'reviewCount'>): Product {
+    const slug = product.slug || product.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     const newProduct: Product = {
       ...product,
+      slug,
       id: `prod-${Date.now()}`,
       soldCount: 0,
       rating: 5.0,
       reviewCount: 0,
+      isActive: product.isActive !== undefined ? product.isActive : true,
+      images: product.images && product.images.length > 0 ? product.images : [
+        { id: 'img-1', url: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80', isPrimary: true, alt: product.name }
+      ],
+      colors: product.colors && product.colors.length > 0 ? product.colors : [{ name: 'Karachi Classic', hex: '#ea580c' }],
+      sizes: product.sizes && product.sizes.length > 0 ? product.sizes : ['Standard'],
       createdAt: new Date().toISOString()
     };
     this.products.unshift(newProduct);
+    this.persist();
     return newProduct;
   }
 
@@ -1633,12 +1851,17 @@ class Database {
     const index = this.products.findIndex(p => p.id === id);
     if (index === -1) return undefined;
     this.products[index] = { ...this.products[index], ...updates };
+    this.persist();
     return this.products[index];
   }
 
   deleteProduct(id: string): boolean {
     const initialLen = this.products.length;
     this.products = this.products.filter(p => p.id !== id);
+    this.curatedSections.forEach(sec => {
+      sec.productIds = sec.productIds.filter(pid => pid !== id);
+    });
+    this.persist();
     return this.products.length < initialLen;
   }
 
@@ -1657,20 +1880,26 @@ class Database {
       createdAt: new Date().toISOString()
     };
     this.products.unshift(duplicated);
+    this.persist();
     return duplicated;
   }
 
   // Categories CRUD
   getCategories(): Category[] {
-    return this.categories.sort((a, b) => a.sortOrder - b.sortOrder);
+    return this.categories.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
   }
 
   createCategory(category: Omit<Category, 'id'>): Category {
+    const slug = category.slug || category.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     const newCat: Category = {
       ...category,
-      id: `cat-${Date.now()}`
+      slug,
+      id: `cat-${Date.now()}`,
+      isActive: category.isActive !== undefined ? category.isActive : true,
+      sortOrder: category.sortOrder || this.categories.length + 1
     };
     this.categories.push(newCat);
+    this.persist();
     return newCat;
   }
 
@@ -1678,13 +1907,119 @@ class Database {
     const idx = this.categories.findIndex(c => c.id === id);
     if (idx === -1) return undefined;
     this.categories[idx] = { ...this.categories[idx], ...updates };
+    this.persist();
     return this.categories[idx];
   }
 
   deleteCategory(id: string): boolean {
     const len = this.categories.length;
     this.categories = this.categories.filter(c => c.id !== id);
+    this.persist();
     return this.categories.length < len;
+  }
+
+  // Curated Merchandising Sections (Top Trends & Best Sellers)
+  getCuratedSections(): CuratedSection[] {
+    return this.curatedSections;
+  }
+
+  getCuratedSection(id: string): CuratedSection | undefined {
+    return this.curatedSections.find(s => s.id === id);
+  }
+
+  updateCuratedSection(id: string, updates: Partial<CuratedSection>): CuratedSection | undefined {
+    const idx = this.curatedSections.findIndex(s => s.id === id);
+    if (idx === -1) {
+      const newSec: CuratedSection = {
+        id,
+        title: updates.title || 'Curated Collection',
+        subtitle: updates.subtitle || '',
+        badge: updates.badge || 'FEATURED',
+        isActive: updates.isActive !== undefined ? updates.isActive : true,
+        productIds: updates.productIds || []
+      };
+      this.curatedSections.push(newSec);
+      this.persist();
+      return newSec;
+    }
+    this.curatedSections[idx] = { ...this.curatedSections[idx], ...updates };
+    this.persist();
+    return this.curatedSections[idx];
+  }
+
+  getCuratedProducts(sectionId: string): Product[] {
+    const sec = this.getCuratedSection(sectionId);
+    if (!sec || !sec.isActive) return [];
+    const productsMap = new Map(this.products.map(p => [p.id, p]));
+    const result: Product[] = [];
+    sec.productIds.forEach(pid => {
+      const prod = productsMap.get(pid);
+      if (prod && prod.isActive !== false) {
+        result.push(prod);
+      }
+    });
+    return result;
+  }
+
+  // About Us & Contact Us CMS
+  getAboutUsConfig(): AboutUsConfig {
+    return this.aboutUsConfig;
+  }
+
+  updateAboutUsConfig(updates: Partial<AboutUsConfig>): AboutUsConfig {
+    this.aboutUsConfig = {
+      ...this.aboutUsConfig,
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    this.persist();
+    return this.aboutUsConfig;
+  }
+
+  getContactUsConfig(): ContactUsConfig {
+    return this.contactUsConfig;
+  }
+
+  updateContactUsConfig(updates: Partial<ContactUsConfig>): ContactUsConfig {
+    this.contactUsConfig = {
+      ...this.contactUsConfig,
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    this.persist();
+    return this.contactUsConfig;
+  }
+
+  // Contact Inquiries
+  getContactInquiries(): ContactInquiry[] {
+    return this.contactInquiries.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  createContactInquiry(data: Omit<ContactInquiry, 'id' | 'createdAt' | 'status'>): ContactInquiry {
+    const inquiry: ContactInquiry = {
+      ...data,
+      id: `inq-${Date.now()}`,
+      status: 'new',
+      createdAt: new Date().toISOString()
+    };
+    this.contactInquiries.unshift(inquiry);
+    this.persist();
+    return inquiry;
+  }
+
+  updateContactInquiry(id: string, updates: Partial<ContactInquiry>): ContactInquiry | undefined {
+    const idx = this.contactInquiries.findIndex(i => i.id === id);
+    if (idx === -1) return undefined;
+    this.contactInquiries[idx] = { ...this.contactInquiries[idx], ...updates };
+    this.persist();
+    return this.contactInquiries[idx];
+  }
+
+  deleteContactInquiry(id: string): boolean {
+    const len = this.contactInquiries.length;
+    this.contactInquiries = this.contactInquiries.filter(i => i.id !== id);
+    this.persist();
+    return this.contactInquiries.length < len;
   }
 
   // Orders CRUD
@@ -1699,7 +2034,6 @@ class Database {
   createOrder(orderData: Omit<Order, 'id' | 'orderNumber' | 'createdAt' | 'updatedAt' | 'trackingHistory'>): Order {
     const orderNumber = `SU-${new Date().getFullYear()}-${1000 + this.orders.length + 1}`;
     
-    // Normalize shippingAddress and flat properties
     const shippingAddress = orderData.shippingAddress || {
       fullName: orderData.customerName,
       phone: orderData.customerPhone || orderData.phone || '',
@@ -1728,35 +2062,217 @@ class Database {
         {
           status: 'pending',
           timestamp: new Date().toISOString(),
-          note: 'Order successfully received in Karachi system.'
+          note: 'Order successfully placed via Stitch & Unstitched Online Checkout'
         }
       ]
     };
 
-    // Deduct stock and increment sold count
-    for (const item of newOrder.items) {
-      const prod = this.products.find(p => p.id === item.productId);
-      if (prod) {
-        prod.stockQuantity = Math.max(0, prod.stockQuantity - item.quantity);
-        prod.soldCount += item.quantity;
-      }
+    this.orders.unshift(newOrder);
+
+    // Increment product soldCount and decrement stock
+    if (Array.isArray(newOrder.items)) {
+      newOrder.items.forEach(item => {
+        const prod = this.products.find(p => p.id === item.productId);
+        if (prod) {
+          prod.soldCount = (prod.soldCount || 0) + (item.quantity || 1);
+          prod.stockQuantity = Math.max(0, prod.stockQuantity - (item.quantity || 1));
+        }
+      });
     }
 
-    this.orders.unshift(newOrder);
+    this.persist();
     return newOrder;
   }
 
-  updateOrderStatus(orderId: string, status: Order['orderStatus'], note?: string): Order | undefined {
-    const order = this.orders.find(o => o.id === orderId);
+  updateOrderStatus(id: string, status: Order['orderStatus'] | string, note?: string): Order | undefined {
+    const order = this.orders.find(o => o.id === id);
     if (!order) return undefined;
-    order.orderStatus = status;
+    order.orderStatus = status as any;
+    order.status = status as any;
     order.updatedAt = new Date().toISOString();
+    if (!order.trackingHistory) order.trackingHistory = [];
     order.trackingHistory.push({
       status,
       timestamp: new Date().toISOString(),
-      note: note || `Order status updated to ${status}.`
+      note: note || `Order status updated to ${status.toUpperCase()} by Karachi Dispatch Operations`
     });
+    this.persist();
     return order;
+  }
+
+  // Reviews CRUD with Admin Approval Workflow
+  getReviews(productId?: string, status?: string): Review[] {
+    let list = this.reviews;
+    if (productId) {
+      list = list.filter(r => r.productId === productId);
+    }
+    if (status) {
+      list = list.filter(r => r.status === status);
+    }
+    return list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  getApprovedReviewsForProduct(productId: string): Review[] {
+    return this.reviews
+      .filter(r => r.productId === productId && r.status === 'approved')
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  createReview(data: {
+    productId: string;
+    productName?: string;
+    customerName: string;
+    customerEmail?: string;
+    rating: number;
+    title?: string;
+    comment: string;
+    imageUrl?: string;
+    verifiedPurchase?: boolean;
+    status?: 'pending' | 'approved' | 'rejected';
+  }): Review {
+    const prod = this.products.find(p => p.id === data.productId);
+    const newReview: Review = {
+      id: `rev-${Date.now()}`,
+      productId: data.productId,
+      productName: data.productName || prod?.name || 'Exclusive Design',
+      customerName: data.customerName,
+      customerEmail: data.customerEmail || 'customer@gmail.com',
+      rating: Number(data.rating) || 5,
+      title: data.title || 'Verified Karachi Customer Review',
+      comment: data.comment,
+      imageUrl: data.imageUrl,
+      verifiedPurchase: data.verifiedPurchase !== undefined ? data.verifiedPurchase : true,
+      status: data.status || 'pending',
+      isFeatured: false,
+      createdAt: new Date().toISOString()
+    };
+    this.reviews.unshift(newReview);
+
+    // Recalculate product rating from approved reviews
+    this.recalculateProductRating(data.productId);
+    this.persist();
+    return newReview;
+  }
+
+  updateReviewStatus(id: string, status: 'pending' | 'approved' | 'rejected'): Review | undefined {
+    const review = this.reviews.find(r => r.id === id);
+    if (!review) return undefined;
+    review.status = status;
+    this.recalculateProductRating(review.productId);
+    this.persist();
+    return review;
+  }
+
+  deleteReview(id: string): boolean {
+    const review = this.reviews.find(r => r.id === id);
+    if (!review) return false;
+    const productId = review.productId;
+    this.reviews = this.reviews.filter(r => r.id !== id);
+    this.recalculateProductRating(productId);
+    this.persist();
+    return true;
+  }
+
+  private recalculateProductRating(productId: string) {
+    const prod = this.products.find(p => p.id === productId);
+    if (!prod) return;
+    const approvedRevs = this.reviews.filter(r => r.productId === productId && r.status === 'approved');
+    prod.reviewCount = approvedRevs.length;
+    if (approvedRevs.length === 0) {
+      prod.rating = 5.0;
+    } else {
+      const sum = approvedRevs.reduce((acc, r) => acc + r.rating, 0);
+      prod.rating = Number((sum / approvedRevs.length).toFixed(1));
+    }
+  }
+
+  // Coupons CRUD
+  getCoupons(): Coupon[] {
+    return this.coupons;
+  }
+
+  validateCoupon(code: string, subtotal: number): { valid: boolean; coupon?: Coupon; discount?: number; message?: string } {
+    const coupon = this.coupons.find(c => c.code.toUpperCase() === code.trim().toUpperCase() && c.isActive);
+    if (!coupon) return { valid: false, message: 'Invalid or expired promo code.' };
+    if (subtotal < coupon.minOrderValue) {
+      return { valid: false, message: `Minimum order value for code ${coupon.code} is Rs. ${coupon.minOrderValue.toLocaleString()}` };
+    }
+    let discount = 0;
+    if (coupon.discountType === 'percentage') {
+      discount = Math.round((subtotal * coupon.discountValue) / 100);
+      if (coupon.maxDiscount && discount > coupon.maxDiscount) {
+        discount = coupon.maxDiscount;
+      }
+    } else {
+      discount = coupon.discountValue;
+    }
+    return { valid: true, coupon, discount, message: `Coupon applied: Rs. ${discount.toLocaleString()} discount` };
+  }
+
+  createCoupon(couponData: Omit<Coupon, 'id' | 'usedCount'>): Coupon {
+    const newCoupon: Coupon = {
+      ...couponData,
+      id: `c-${Date.now()}`,
+      usedCount: 0
+    };
+    this.coupons.push(newCoupon);
+    this.persist();
+    return newCoupon;
+  }
+
+  updateCoupon(id: string, updates: Partial<Coupon>): Coupon | undefined {
+    const idx = this.coupons.findIndex(c => c.id === id);
+    if (idx === -1) return undefined;
+    this.coupons[idx] = { ...this.coupons[idx], ...updates };
+    this.persist();
+    return this.coupons[idx];
+  }
+
+  deleteCoupon(id: string): boolean {
+    const len = this.coupons.length;
+    this.coupons = this.coupons.filter(c => c.id !== id);
+    this.persist();
+    return this.coupons.length < len;
+  }
+
+  // Flash Sale & Banners
+  getFlashSale(): FlashSale {
+    return this.flashSale;
+  }
+
+  updateFlashSale(updates: Partial<FlashSale>): FlashSale {
+    this.flashSale = { ...this.flashSale, ...updates };
+    this.persist();
+    return this.flashSale;
+  }
+
+  getBanners(): Banner[] {
+    return this.banners.sort((a, b) => a.sortOrder - b.sortOrder);
+  }
+
+  createBanner(banner: Omit<Banner, 'id'>): Banner {
+    const newBanner: Banner = {
+      ...banner,
+      id: `ban-${Date.now()}`
+    };
+    this.banners.push(newBanner);
+    this.persist();
+    return newBanner;
+  }
+
+  updateBanner(id: string, updates: Partial<Banner>): Banner | undefined {
+    const idx = this.banners.findIndex(b => b.id === id);
+    if (idx === -1) return undefined;
+    this.banners[idx] = { ...this.banners[idx], ...updates };
+    this.persist();
+    return this.banners[idx];
+  }
+
+  deleteBanner(id: string): boolean {
+    const len = this.banners.length;
+    this.banners = this.banners.filter(b => b.id !== id);
+    this.persist();
+    return this.banners.length < len;
   }
 
   // Customers
@@ -1768,7 +2284,7 @@ class Database {
     return this.customers.find(c => c.email.toLowerCase() === email.toLowerCase());
   }
 
-  createCustomer(data: Omit<Customer, 'id' | 'createdAt' | 'totalSpent' | 'ordersCount' | 'isActive'>): Customer {
+  createCustomer(data: Omit<Customer, 'id' | 'totalSpent' | 'ordersCount' | 'isActive' | 'createdAt'>): Customer {
     const newCustomer: Customer = {
       ...data,
       id: `cust-${Date.now()}`,
@@ -1778,234 +2294,139 @@ class Database {
       createdAt: new Date().toISOString()
     };
     this.customers.push(newCustomer);
+    this.persist();
     return newCustomer;
   }
 
-  // Subscribers / Newsletter & WhatsApp Broadcasts
+  // Newsletter & Subscribers
   getSubscribers(): Subscriber[] {
-    return this.subscribers;
+    return this.subscribers.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }
 
   addSubscriber(data: { email?: string; whatsapp?: string; name?: string; city?: string; source?: string }): Subscriber {
-    const cleanEmail = data.email?.trim().toLowerCase();
-    const cleanWhatsapp = data.whatsapp?.trim();
-
-    // Check if already subscribed
-    const existing = this.subscribers.find(
-      s => (cleanEmail && s.email?.toLowerCase() === cleanEmail) || (cleanWhatsapp && s.whatsapp === cleanWhatsapp)
+    const existing = this.subscribers.find(s =>
+      (data.email && s.email && s.email.toLowerCase() === data.email.toLowerCase()) ||
+      (data.whatsapp && s.whatsapp && s.whatsapp === data.whatsapp)
     );
-
     if (existing) {
       existing.status = 'active';
-      if (data.name && !existing.name) existing.name = data.name;
-      if (data.whatsapp && !existing.whatsapp) existing.whatsapp = data.whatsapp;
-      if (data.email && !existing.email) existing.email = data.email;
-      if (data.city && !existing.city) existing.city = data.city;
+      this.persist();
       return existing;
     }
-
     const newSub: Subscriber = {
       id: `sub-${Date.now()}`,
-      email: cleanEmail,
-      whatsapp: cleanWhatsapp,
-      name: data.name?.trim() || (cleanEmail ? cleanEmail.split('@')[0] : 'VIP Client'),
-      city: data.city?.trim() || 'Karachi',
+      email: data.email,
+      whatsapp: data.whatsapp,
+      name: data.name,
+      city: data.city || 'Karachi',
       status: 'active',
-      source: data.source || 'Online Storefront',
+      source: data.source || 'Website Popup/Footer',
       createdAt: new Date().toISOString()
     };
-
     this.subscribers.unshift(newSub);
+    this.persist();
     return newSub;
   }
 
   deleteSubscriber(id: string): boolean {
-    const initialLen = this.subscribers.length;
+    const len = this.subscribers.length;
     this.subscribers = this.subscribers.filter(s => s.id !== id);
-    return this.subscribers.length < initialLen;
+    this.persist();
+    return this.subscribers.length < len;
   }
 
-  broadcastNewsletter(message: string, channel: 'whatsapp' | 'email' | 'both'): { success: boolean; count: number; message: string } {
-    let targets = this.subscribers.filter(s => s.status === 'active');
-    if (channel === 'whatsapp') {
-      targets = targets.filter(s => !!s.whatsapp);
-    } else if (channel === 'email') {
-      targets = targets.filter(s => !!s.email);
-    }
-
+  broadcastNewsletter(message: string, channel: 'whatsapp' | 'email' | 'both') {
+    const activeSubscribers = this.subscribers.filter(s => s.status === 'active');
+    const emailRecipients = activeSubscribers.filter(s => s.email).map(s => s.email!);
+    const whatsappRecipients = activeSubscribers.filter(s => s.whatsapp).map(s => s.whatsapp!);
     return {
       success: true,
-      count: targets.length,
-      message: `Broadcast successfully dispatched to ${targets.length} subscriber(s) via ${channel.toUpperCase()}.`
+      timestamp: new Date().toISOString(),
+      channel,
+      sentCount: channel === 'both' ? activeSubscribers.length : channel === 'email' ? emailRecipients.length : whatsappRecipients.length,
+      emailsCount: emailRecipients.length,
+      whatsappCount: whatsappRecipients.length,
+      messagePreview: message.slice(0, 100) + '...'
     };
   }
 
-  // Coupons
-  getCoupons(): Coupon[] {
-    return this.coupons;
-  }
-
-  validateCoupon(code: string, subtotal: number): { valid: boolean; coupon?: Coupon; discount?: number; message?: string } {
-    const coupon = this.coupons.find(c => c.code.toUpperCase() === code.toUpperCase() && c.isActive);
-    if (!coupon) {
-      return { valid: false, message: 'Invalid or inactive coupon code.' };
-    }
-    const now = new Date();
-    if (new Date(coupon.startDate) > now || new Date(coupon.endDate) < now) {
-      return { valid: false, message: 'This coupon has expired.' };
-    }
-    if (coupon.usedCount >= coupon.usageLimit) {
-      return { valid: false, message: 'Coupon usage limit has been reached.' };
-    }
-    if (subtotal < coupon.minOrderValue) {
-      return { valid: false, message: `Minimum order value of Rs. ${coupon.minOrderValue.toLocaleString()} required.` };
-    }
-
-    let discount = 0;
-    if (coupon.discountType === 'percentage') {
-      discount = (subtotal * coupon.discountValue) / 100;
-      if (coupon.maxDiscount && discount > coupon.maxDiscount) {
-        discount = coupon.maxDiscount;
-      }
-    } else {
-      discount = coupon.discountValue;
-    }
-
-    return { valid: true, coupon, discount: Math.round(discount), message: 'Coupon applied successfully!' };
-  }
-
-  createCoupon(coupon: Omit<Coupon, 'id' | 'usedCount'>): Coupon {
-    const newCoupon: Coupon = {
-      ...coupon,
-      id: `coup-${Date.now()}`,
-      usedCount: 0
-    };
-    this.coupons.push(newCoupon);
-    return newCoupon;
-  }
-
-  updateCoupon(id: string, updates: Partial<Coupon>): Coupon | undefined {
-    const idx = this.coupons.findIndex(c => c.id === id);
-    if (idx === -1) return undefined;
-    this.coupons[idx] = { ...this.coupons[idx], ...updates };
-    return this.coupons[idx];
-  }
-
-  deleteCoupon(id: string): boolean {
-    const len = this.coupons.length;
-    this.coupons = this.coupons.filter(c => c.id !== id);
-    return this.coupons.length < len;
-  }
-
-  // Flash Sale
-  getFlashSale(): FlashSale {
-    return this.flashSale;
-  }
-
-  updateFlashSale(updates: Partial<FlashSale>): FlashSale {
-    this.flashSale = { ...this.flashSale, ...updates };
-    return this.flashSale;
-  }
-
-  // Banners
-  getBanners(): Banner[] {
-    return this.banners.sort((a, b) => a.sortOrder - b.sortOrder);
-  }
-
-  createBanner(banner: Omit<Banner, 'id'>): Banner {
-    const newBanner: Banner = { ...banner, id: `ban-${Date.now()}` };
-    this.banners.push(newBanner);
-    return newBanner;
-  }
-
-  updateBanner(id: string, updates: Partial<Banner>): Banner | undefined {
-    const idx = this.banners.findIndex(b => b.id === id);
-    if (idx === -1) return undefined;
-    this.banners[idx] = { ...this.banners[idx], ...updates };
-    return this.banners[idx];
-  }
-
-  deleteBanner(id: string): boolean {
-    const len = this.banners.length;
-    this.banners = this.banners.filter(b => b.id !== id);
-    return this.banners.length < len;
-  }
-
-  // Reviews
-  getReviews(productId?: string): Review[] {
-    if (productId) {
-      return this.reviews.filter(r => r.productId === productId && r.status === 'approved');
-    }
-    return this.reviews;
-  }
-
-  createReview(review: Omit<Review, 'id' | 'createdAt' | 'status' | 'isFeatured'>): Review {
-    const newReview: Review = {
-      ...review,
-      id: `rev-${Date.now()}`,
-      status: 'approved', // Auto-approved in demo for instant feedback
-      isFeatured: false,
-      createdAt: new Date().toISOString()
-    };
-    this.reviews.unshift(newReview);
-
-    // Update product rating
-    const prodReviews = this.reviews.filter(r => r.productId === review.productId && r.status === 'approved');
-    const totalRating = prodReviews.reduce((sum, r) => sum + r.rating, 0);
-    const avg = prodReviews.length ? +(totalRating / prodReviews.length).toFixed(1) : 5.0;
-
-    const prod = this.products.find(p => p.id === review.productId);
-    if (prod) {
-      prod.rating = avg;
-      prod.reviewCount = prodReviews.length;
-    }
-
-    return newReview;
-  }
-
-  updateReviewStatus(id: string, status: Review['status']): Review | undefined {
-    const r = this.reviews.find(rev => rev.id === id);
-    if (!r) return undefined;
-    r.status = status;
-    return r;
-  }
-
-  deleteReview(id: string): boolean {
-    const len = this.reviews.length;
-    this.reviews = this.reviews.filter(r => r.id !== id);
-    return this.reviews.length < len;
-  }
-
-  // CMS
+  // CMS Pages
   getCMSPage(slug: string): CMSPage | undefined {
     return this.cmsPages.find(p => p.slug === slug);
   }
 
+  getAllCMSPages(): CMSPage[] {
+    return this.cmsPages;
+  }
+
   updateCMSPage(slug: string, updates: Partial<CMSPage>): CMSPage | undefined {
     const idx = this.cmsPages.findIndex(p => p.slug === slug);
-    if (idx === -1) return undefined;
-    this.cmsPages[idx] = { ...this.cmsPages[idx], ...updates, updatedAt: new Date().toISOString() };
+    if (idx === -1) {
+      const newPage: CMSPage = {
+        slug,
+        title: updates.title || slug.toUpperCase(),
+        subtitle: updates.subtitle,
+        content: updates.content || '',
+        metaTitle: updates.metaTitle || `${updates.title || slug} | Stitch & Unstitched`,
+        metaDescription: updates.metaDescription || '',
+        updatedAt: new Date().toISOString()
+      };
+      this.cmsPages.push(newPage);
+      this.persist();
+      return newPage;
+    }
+    this.cmsPages[idx] = {
+      ...this.cmsPages[idx],
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    this.persist();
     return this.cmsPages[idx];
   }
 
-  // Settings
+  // Store Settings & Branding
   getSettings(): StoreSettings {
     return this.settings;
   }
 
   updateSettings(updates: Partial<StoreSettings>): StoreSettings {
-    this.settings = { ...this.settings, ...updates };
+    const fee = updates.karachiShippingFee !== undefined 
+      ? Number(updates.karachiShippingFee) 
+      : (updates.shippingFee !== undefined 
+          ? Number(updates.shippingFee) 
+          : (updates.deliveryFee !== undefined 
+              ? Number(updates.deliveryFee) 
+              : undefined));
+
+    const nationwide = updates.nationwideShippingFee !== undefined ? Number(updates.nationwideShippingFee) : undefined;
+    const threshold = updates.freeShippingThreshold !== undefined ? Number(updates.freeShippingThreshold) : undefined;
+
+    this.settings = {
+      ...this.settings,
+      ...updates,
+      ...(fee !== undefined ? {
+        karachiShippingFee: fee,
+        shippingFee: fee,
+        deliveryFee: fee,
+      } : {}),
+      ...(nationwide !== undefined ? { nationwideShippingFee: nationwide } : {}),
+      ...(threshold !== undefined ? { freeShippingThreshold: threshold } : {}),
+    };
+    this.persist();
     return this.settings;
   }
 
-  // Navigation CRUD
+  // Navigation Menu CRUD
   getNavItems(onlyActive = false): NavItem[] {
-    const list = onlyActive ? this.navItems.filter(i => i.isActive) : this.navItems;
-    return list.slice().sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+    let items = this.navItems;
+    if (onlyActive) items = items.filter(i => i.isActive);
+    return items.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
   }
 
-  getNavItemById(id: string): NavItem | undefined {
-    return this.navItems.find(i => i.id === id);
+  saveNavItems(items: NavItem[]): NavItem[] {
+    this.navItems = items.map((item, idx) => ({ ...item, sortOrder: idx + 1 }));
+    this.persist();
+    return this.navItems;
   }
 
   createNavItem(item: Omit<NavItem, 'id'>): NavItem {
@@ -2017,6 +2438,7 @@ class Database {
       isActive: item.isActive !== undefined ? item.isActive : true
     };
     this.navItems.push(newItem);
+    this.persist();
     return newItem;
   }
 
@@ -2024,41 +2446,45 @@ class Database {
     const idx = this.navItems.findIndex(i => i.id === id);
     if (idx === -1) return undefined;
     this.navItems[idx] = { ...this.navItems[idx], ...updates };
+    this.persist();
     return this.navItems[idx];
   }
 
   deleteNavItem(id: string): boolean {
     const len = this.navItems.length;
     this.navItems = this.navItems.filter(i => i.id !== id);
+    this.persist();
     return this.navItems.length < len;
   }
 
-  saveNavItems(items: NavItem[]): NavItem[] {
-    this.navItems = items.map((it, idx) => ({
-      ...it,
-      sortOrder: it.sortOrder !== undefined ? it.sortOrder : idx + 1,
-      isActive: it.isActive !== undefined ? it.isActive : true,
-    }));
+  reorderNavItems(ids: string[]): NavItem[] {
+    const itemMap = new Map(this.navItems.map(i => [i.id, i]));
+    const reordered: NavItem[] = [];
+    ids.forEach((id, idx) => {
+      const item = itemMap.get(id);
+      if (item) {
+        item.sortOrder = idx + 1;
+        reordered.push(item);
+        itemMap.delete(id);
+      }
+    });
+    itemMap.forEach(remaining => {
+      remaining.sortOrder = reordered.length + 1;
+      reordered.push(remaining);
+    });
+    this.navItems = reordered;
+    this.persist();
     return this.navItems;
   }
 
-  reorderNavItems(orderedIds: string[]): NavItem[] {
-    orderedIds.forEach((id, index) => {
-      const item = this.navItems.find(i => i.id === id);
-      if (item) {
-        item.sortOrder = index + 1;
-      }
-    });
-    return this.getNavItems();
-  }
-
-  // Footer CRUD
+  // Footer Configuration
   getFooterConfig(): FooterConfig {
     return this.footerConfig;
   }
 
   updateFooterConfig(updates: Partial<FooterConfig>): FooterConfig {
     this.footerConfig = { ...this.footerConfig, ...updates };
+    this.persist();
     return this.footerConfig;
   }
 
@@ -2072,6 +2498,7 @@ class Database {
       links: section.links || []
     };
     this.footerConfig.sections.push(newSection);
+    this.persist();
     return newSection;
   }
 
@@ -2079,12 +2506,14 @@ class Database {
     const idx = this.footerConfig.sections.findIndex(s => s.id === id);
     if (idx === -1) return undefined;
     this.footerConfig.sections[idx] = { ...this.footerConfig.sections[idx], ...updates };
+    this.persist();
     return this.footerConfig.sections[idx];
   }
 
   deleteFooterSection(id: string): boolean {
     const len = this.footerConfig.sections.length;
     this.footerConfig.sections = this.footerConfig.sections.filter(s => s.id !== id);
+    this.persist();
     return this.footerConfig.sections.length < len;
   }
 
@@ -2099,6 +2528,7 @@ class Database {
       isActive: link.isActive !== undefined ? link.isActive : true
     };
     sec.links.push(newLink);
+    this.persist();
     return newLink;
   }
 
@@ -2108,6 +2538,7 @@ class Database {
     const idx = sec.links.findIndex(l => l.id === linkId);
     if (idx === -1) return undefined;
     sec.links[idx] = { ...sec.links[idx], ...updates };
+    this.persist();
     return sec.links[idx];
   }
 
@@ -2116,6 +2547,7 @@ class Database {
     if (!sec) return false;
     const len = sec.links.length;
     sec.links = sec.links.filter(l => l.id !== linkId);
+    this.persist();
     return sec.links.length < len;
   }
 
@@ -2127,7 +2559,7 @@ class Database {
     const deliveredOrders = this.orders.filter(o => o.orderStatus === 'delivered').length;
     const totalCustomers = this.customers.length;
     const totalProducts = this.products.length;
-    const lowStockProducts = this.products.filter(p => p.stockQuantity <= p.lowStockThreshold).length;
+    const lowStockProducts = this.products.filter(p => p.stockQuantity <= (p.lowStockThreshold || 5)).length;
 
     return {
       totalSales,
@@ -2140,7 +2572,7 @@ class Database {
       totalProducts,
       lowStockProducts,
       recentOrders: this.orders.slice(0, 5),
-      topSelling: this.products.slice().sort((a, b) => b.soldCount - a.soldCount).slice(0, 5)
+      topSelling: this.products.slice().sort((a, b) => (b.soldCount || 0) - (a.soldCount || 0)).slice(0, 5)
     };
   }
 }

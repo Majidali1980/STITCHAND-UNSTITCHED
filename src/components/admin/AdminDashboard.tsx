@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   Clock,
   Plus,
+  FileSpreadsheet,
 } from 'lucide-react';
 import { AdminTab } from './AdminLayout';
 import { api } from '../../services/api';
@@ -69,6 +70,14 @@ export const AdminDashboard: React.FC<{ onNavigateTab: (tab: AdminTab) => void }
         </div>
 
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => onNavigateTab('orders')}
+            className="flex items-center gap-1.5 bg-[#27272a] hover:bg-[#3f3f46] text-white px-3.5 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-colors border border-[#3f3f46]"
+          >
+            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Excel Reports</span>
+          </button>
+
           <button
             onClick={() => onNavigateTab('products')}
             className="flex items-center gap-1.5 bg-[#ea580c] hover:bg-[#c2410c] text-white px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors shadow-md"

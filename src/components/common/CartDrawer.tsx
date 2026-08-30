@@ -24,6 +24,7 @@ export const CartDrawer: React.FC = () => {
     appliedCoupon,
     couponDiscount,
     total,
+    freeShippingThreshold,
     freeShippingProgress,
     updateCartQuantity,
     removeFromCart,
@@ -85,7 +86,7 @@ export const CartDrawer: React.FC = () => {
                 <Truck className="w-4 h-4" />
                 {freeShippingProgress >= 100
                   ? 'You unlocked FREE delivery in Karachi & Nationwide!'
-                  : `Add ${formatPrice(3000 - subtotal)} more for FREE Delivery`}
+                  : `Add ${formatPrice(freeShippingThreshold - subtotal)} more for FREE Delivery`}
               </span>
               <span>{freeShippingProgress}%</span>
             </div>

@@ -918,7 +918,12 @@ export const AdminCategories: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-bold text-white mb-1">Circular Cover Image URL *</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block font-bold text-white">Cover Image URL *</label>
+                  <span className="text-[10px] text-[#fed7aa] font-semibold">
+                    📐 Required Dimensions: 600 × 600 px (1:1) or 600 × 800 px
+                  </span>
+                </div>
                 <div className="flex gap-3 items-center">
                   <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-[#ea580c] shrink-0 bg-stone-900">
                     <img
@@ -939,10 +944,10 @@ export const AdminCategories: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-bold text-white mb-1">Description</label>
+                <label className="block font-bold text-white mb-1">Category Description &amp; SEO Summary</label>
                 <textarea
                   rows={2}
-                  placeholder="Provide a concise, elegant description for marketing and SEO..."
+                  placeholder="Provide a concise, elegant description for search engines and category banner..."
                   value={description}
                   onChange={e => setDescription(e.target.value)}
                   className="w-full bg-[#18181b] border border-[#27272a] text-white p-3 rounded-xl focus:outline-none focus:border-[#ea580c]"

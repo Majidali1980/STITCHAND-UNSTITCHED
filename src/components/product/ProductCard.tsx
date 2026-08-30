@@ -37,7 +37,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className = '
     : 0;
 
   const handleCardClick = () => {
-    setQuickViewProduct(product);
+    navigate('product', { id: product.id, slug: product.slug });
   };
 
   const handleQuickAdd = (e: React.MouseEvent) => {
@@ -49,7 +49,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className = '
 
   const handleQuickView = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setQuickViewProduct(product);
+    navigate('product', { id: product.id, slug: product.slug });
   };
 
   const handleToggleWishlist = (e: React.MouseEvent) => {

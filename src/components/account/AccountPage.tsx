@@ -14,10 +14,13 @@ import {
   Scissors,
   ArrowRight,
   ShieldCheck,
+  MessageCircle,
+  Printer,
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { Order, Product } from '../../types';
 import { api } from '../../services/api';
+import { PrintableInvoice } from '../common/PrintableInvoice';
 
 export const AccountPage: React.FC = () => {
   const {
@@ -31,6 +34,7 @@ export const AccountPage: React.FC = () => {
     viewParams,
     formatPrice,
     toggleAdminMode,
+    settings,
   } = useStore();
 
   const [activeTab, setActiveTab] = useState<'orders' | 'wishlist' | 'addresses' | 'profile'>(
@@ -38,6 +42,17 @@ export const AccountPage: React.FC = () => {
   );
   const [orders, setOrders] = useState<Order[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
+  const [selectedInvoiceOrder, setSelectedInvoiceOrder] = useState<Order | null>(null);
+
+  const rawPhone = settings?.whatsapp || '+92 300 1234567';
+  const cleanStorePhone = rawPhone.replace(/[^0-9]/g, '');
+
+  const handleInquireStatusOnWhatsApp = (order: Order) => {
+    const msg = encodeURIComponent(
+      `Salam Stitch & Unstitched Concierge! I would like to check the dispatch & delivery status of my Order #${order.orderNumber} placed for ${formatPrice(order.total)}. Delivery address: ${order.shippingAddress?.area || order.area || 'Karachi'}.`
+    );
+    window.open(`https://wa.me/${cleanStorePhone}?text=${msg}`, '_blank', 'noopener,noreferrer');
+  };
   const [loginEmail, setLoginEmail] = useState('');
 
   useEffect(() => {
@@ -303,6 +318,32 @@ export const AccountPage: React.FC = () => {
                         ))}
                       </div>
                     </div>
+
+                    {/* Order Action Buttons (WhatsApp Status & Printable Invoice) */}
+                    <div className="pt-4 border-t border-[#f0ece1] flex flex-wrap items-center justify-between gap-3">
+                      <div className="text-[11px] text-[#78716c] flex items-center gap-1.5">
+                        <Truck className="w-3.5 h-3.5 text-[#ea580c]" />
+                        <span>Karachi Courier Dispatch Line: <strong>{settings?.whatsapp || '+92 300 1234567'}</strong></span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => setSelectedInvoiceOrder(order)}
+                          className="inline-flex items-center gap-1.5 bg-[#faf8f5] hover:bg-[#ede8dc] text-[#1c1917] px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-[#d6cfc4] transition-colors"
+                        >
+                          <Printer className="w-3.5 h-3.5" />
+                          <span>1-Page Receipt</span>
+                        </button>
+
+                        <button
+                          onClick={() => handleInquireStatusOnWhatsApp(order)}
+                          className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs"
+                        >
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          <span>Ask Status on WhatsApp</span>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 );
               })
@@ -443,6 +484,14 @@ export const AccountPage: React.FC = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {/* 1-Page Printable Invoice Modal for Customer */}
+        {selectedInvoiceOrder && (
+          <PrintableInvoice
+            order={selectedInvoiceOrder}
+            onClose={() => setSelectedInvoiceOrder(null)}
+          />
         )}
       </div>
     </div>

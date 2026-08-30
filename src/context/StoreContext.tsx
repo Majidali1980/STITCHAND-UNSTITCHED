@@ -42,6 +42,10 @@ interface StoreContextType {
   cartCount: number;
   subtotal: number;
   shippingFee: number;
+  karachiShippingFee: number;
+  nationwideShippingFee: number;
+  freeShippingThreshold: number;
+  calculateShippingFee: (subtotal: number, city?: string) => number;
   appliedCoupon: Coupon | null;
   couponDiscount: number;
   total: number;
@@ -111,7 +115,10 @@ const StoreContext = createContext<StoreContextType | null>(null);
 const DEFAULT_SETTINGS: StoreSettings = {
   storeName: 'STITCH & UNSTITCHED',
   tagline: 'Modern Pakistani Sartorial Luxury',
-  logo: '/logo.png',
+  logo: '',
+  logoUrl: '',
+  favicon: '',
+  faviconUrl: '',
   phone: '+92 21 35870000',
   whatsapp: '+92 300 1234567',
   email: 'care@stitchandunstitched.com',
@@ -122,6 +129,23 @@ const DEFAULT_SETTINGS: StoreSettings = {
   freeShippingThreshold: 3000,
   karachiShippingFee: 150,
   nationwideShippingFee: 250,
+  deliveryFee: 150,
+  shippingFee: 150,
+  customDeliveryAreas: [
+    'DHA Phase 1 - 8 (All Sectors)',
+    'Clifton Blocks 1 - 9 & Sea View',
+    'Gulshan-e-Iqbal (Blocks 1 - 19)',
+    'Gulistan-e-Johar (Blocks 1 - 20)',
+    'PECHS Blocks 2, 3 & 6',
+    'Bahria Town Karachi (All Precincts)',
+    'North Nazimabad & Buffer Zone',
+    'Federal B Area & Nazimabad',
+    'KDA Scheme 1, Karsaz & Navy Housing',
+    'Saddar, Cantt & Civil Lines',
+    'Malir Cantt & Model Colony',
+    'Karachi Admin Society & Baloch Colony',
+    'Scheme 33 & Gulshan-e-Maymar',
+  ],
   facebookUrl: 'https://facebook.com',
   instagramUrl: 'https://instagram.com',
   tiktokUrl: 'https://tiktok.com',
@@ -209,13 +233,24 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [isAIStylistOpen, setIsAIStylistOpen] = useState(false);
 
   // Global Config & Toasts
-  const [settings, setSettings] = useState<StoreSettings | null>(DEFAULT_SETTINGS);
+  const [settings, setSettings] = useState<StoreSettings | null>(() => {
+    try {
+      const saved = localStorage.getItem('su_settings');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.storeName) return parsed;
+      }
+    } catch {
+      // fallback
+    }
+    return DEFAULT_SETTINGS;
+  });
   const [categories, setCategories] = useState<Category[]>([]);
   const [navItems, setNavItems] = useState<NavItem[]>([]);
   const [footerConfig, setFooterConfig] = useState<FooterConfig | null>(null);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
-  // Sync Cart & Wishlist to localStorage
+  // Sync Cart & Wishlist & Settings to localStorage
   useEffect(() => {
     localStorage.setItem('su_cart', JSON.stringify(cart));
   }, [cart]);
@@ -223,6 +258,25 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     localStorage.setItem('su_wishlist', JSON.stringify(wishlist));
   }, [wishlist]);
+
+  useEffect(() => {
+    if (settings) {
+      localStorage.setItem('su_settings', JSON.stringify(settings));
+      if (settings.storeName) {
+        document.title = `${settings.storeName} | ${settings.tagline || 'Luxury Stitched & Unstitched Atelier'}`;
+      }
+      const fav = settings.faviconUrl || settings.favicon;
+      if (fav) {
+        let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
+        if (!link) {
+          link = document.createElement('link');
+          link.rel = 'icon';
+          document.getElementsByTagName('head')[0].appendChild(link);
+        }
+        link.href = fav;
+      }
+    }
+  }, [settings]);
 
   useEffect(() => {
     if (customer) {
@@ -234,7 +288,10 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const refreshSettings = async () => {
     try {
       const data = await api.getSettings();
-      if (data && data.storeName) setSettings(data);
+      if (data && data.storeName) {
+        setSettings(data);
+        localStorage.setItem('su_settings', JSON.stringify(data));
+      }
     } catch (e) {
       console.warn('Using default settings fallback');
     }
@@ -298,9 +355,26 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  const freeShippingThreshold = settings?.freeShippingThreshold || 3000;
-  const shippingFee = subtotal >= freeShippingThreshold || subtotal === 0 ? 0 : (settings?.karachiShippingFee || 150);
-  const freeShippingProgress = Math.min(100, Math.round((subtotal / freeShippingThreshold) * 100));
+  const freeShippingThreshold = settings?.freeShippingThreshold !== undefined ? Number(settings.freeShippingThreshold) : 3000;
+  const karachiShippingFee = settings?.karachiShippingFee !== undefined 
+    ? Number(settings.karachiShippingFee) 
+    : (settings?.shippingFee !== undefined 
+        ? Number(settings.shippingFee) 
+        : (settings?.deliveryFee !== undefined 
+            ? Number(settings.deliveryFee) 
+            : 150));
+  const nationwideShippingFee = settings?.nationwideShippingFee !== undefined ? Number(settings.nationwideShippingFee) : 250;
+
+  const calculateShippingFee = (subtotalAmount: number, destCity = 'Karachi'): number => {
+    if (subtotalAmount === 0 || subtotalAmount >= freeShippingThreshold) {
+      return 0;
+    }
+    const isKarachi = (destCity || '').trim().toLowerCase().includes('karachi');
+    return isKarachi ? karachiShippingFee : nationwideShippingFee;
+  };
+
+  const shippingFee = subtotal >= freeShippingThreshold || subtotal === 0 ? 0 : karachiShippingFee;
+  const freeShippingProgress = Math.min(100, Math.round((subtotal / (freeShippingThreshold || 1)) * 100));
 
   const total = Math.max(0, subtotal - couponDiscount + shippingFee);
 
@@ -484,6 +558,10 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         cartCount,
         subtotal,
         shippingFee,
+        karachiShippingFee,
+        nationwideShippingFee,
+        freeShippingThreshold,
+        calculateShippingFee,
         appliedCoupon,
         couponDiscount,
         total,

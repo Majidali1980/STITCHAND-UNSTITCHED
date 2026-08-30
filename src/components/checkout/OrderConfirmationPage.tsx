@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   CheckCircle2,
   Package,
@@ -10,13 +10,27 @@ import {
   ArrowRight,
   Receipt,
   Scissors,
+  MessageCircle,
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { Order } from '../../types';
+import { PrintableInvoice } from '../common/PrintableInvoice';
 
 export const OrderConfirmationPage: React.FC = () => {
-  const { viewParams, navigate, formatPrice } = useStore();
+  const { viewParams, navigate, formatPrice, settings } = useStore();
   const order: Order | null = viewParams.order || null;
+  const [showPrintModal, setShowPrintModal] = useState(false);
+
+  const rawPhone = settings?.whatsapp || '+92 300 1234567';
+  const cleanStorePhone = rawPhone.replace(/[^0-9]/g, '');
+
+  const handleWhatsAppStatus = () => {
+    if (!order) return;
+    const msg = encodeURIComponent(
+      `Assalam-o-Alaikum Stitch & Unstitched Concierge! I have placed Order #${order.orderNumber} for PKR ${order.total}. Could you please confirm the dispatch status to ${order.shippingAddress?.area || order.area || 'Karachi'}?`
+    );
+    window.open(`https://wa.me/${cleanStorePhone}?text=${msg}`, '_blank', 'noopener,noreferrer');
+  };
 
   if (!order) {
     return (
@@ -35,7 +49,7 @@ export const OrderConfirmationPage: React.FC = () => {
   }
 
   const handlePrint = () => {
-    window.print();
+    setShowPrintModal(true);
   };
 
   return (
@@ -72,8 +86,16 @@ export const OrderConfirmationPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Action Bar (Print / Continue) */}
+          {/* Action Bar (Print / WhatsApp / Continue) */}
           <div className="pt-2 flex flex-wrap items-center justify-center gap-3 print:hidden">
+            <button
+              onClick={handleWhatsAppStatus}
+              className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs"
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>WhatsApp Order Status</span>
+            </button>
+
             <button
               onClick={handlePrint}
               className="inline-flex items-center gap-2 bg-[#faf8f5] hover:bg-[#ede8dc] text-[#292524] px-5 py-2.5 rounded-xl text-xs font-semibold border border-[#d6cfc4] transition-colors"
@@ -205,6 +227,14 @@ export const OrderConfirmationPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {showPrintModal && (
+        <PrintableInvoice
+          order={order}
+          onClose={() => setShowPrintModal(false)}
+          autoPrint={true}
+        />
+      )}
     </div>
   );
 };

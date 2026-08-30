@@ -210,8 +210,14 @@ app.delete('/api/banners/:id', (req, res) => {
 
 // 6. Reviews
 app.get('/api/reviews', (req, res) => {
-  const { productId } = req.query;
-  res.json(db.getReviews(productId as string));
+  const { productId, status } = req.query;
+  res.json(db.getReviews(productId as string, status as string));
+});
+
+app.get('/api/products/:idOrSlug/reviews', (req, res) => {
+  const product = db.getProductByIdOrSlug(req.params.idOrSlug);
+  if (!product) return res.status(404).json({ error: 'Product not found' });
+  res.json(db.getApprovedReviewsForProduct(product.id));
 });
 
 app.post('/api/reviews', (req, res) => {
@@ -228,6 +234,70 @@ app.put('/api/reviews/:id/status', (req, res) => {
 app.delete('/api/reviews/:id', (req, res) => {
   const deleted = db.deleteReview(req.params.id);
   if (!deleted) return res.status(404).json({ error: 'Review not found' });
+  res.json({ success: true });
+});
+
+// 6b. Curated Merchandising Sections (Top Trends, Best Sellers)
+app.get('/api/curated-sections', (req, res) => {
+  res.json(db.getCuratedSections());
+});
+
+app.get('/api/curated-sections/:id', (req, res) => {
+  const sec = db.getCuratedSection(req.params.id);
+  if (!sec) return res.status(404).json({ error: 'Section not found' });
+  res.json(sec);
+});
+
+app.put('/api/curated-sections/:id', (req, res) => {
+  const updated = db.updateCuratedSection(req.params.id, req.body);
+  if (!updated) return res.status(404).json({ error: 'Failed to update section' });
+  res.json(updated);
+});
+
+app.get('/api/curated-sections/:id/products', (req, res) => {
+  res.json(db.getCuratedProducts(req.params.id));
+});
+
+// 6c. About Us CMS
+app.get('/api/about-us', (req, res) => {
+  res.json(db.getAboutUsConfig());
+});
+
+app.put('/api/about-us', (req, res) => {
+  res.json(db.updateAboutUsConfig(req.body));
+});
+
+// 6d. Contact Us CMS & Inquiries
+app.get('/api/contact-us', (req, res) => {
+  res.json(db.getContactUsConfig());
+});
+
+app.put('/api/contact-us', (req, res) => {
+  res.json(db.updateContactUsConfig(req.body));
+});
+
+app.get('/api/contact/inquiries', (req, res) => {
+  res.json(db.getContactInquiries());
+});
+
+app.post('/api/contact/inquiries', (req, res) => {
+  try {
+    const inq = db.createContactInquiry(req.body);
+    res.status(201).json(inq);
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.put('/api/contact/inquiries/:id', (req, res) => {
+  const updated = db.updateContactInquiry(req.params.id, req.body);
+  if (!updated) return res.status(404).json({ error: 'Inquiry not found' });
+  res.json(updated);
+});
+
+app.delete('/api/contact/inquiries/:id', (req, res) => {
+  const ok = db.deleteContactInquiry(req.params.id);
+  if (!ok) return res.status(404).json({ error: 'Inquiry not found' });
   res.json({ success: true });
 });
 
@@ -437,6 +507,71 @@ Keep the tone welcoming, sophisticated, and distinctly Pakistani fashion-forward
 *For bespoke measurement consultations, connect with our Karachi Atelier concierge on WhatsApp at +92 300 1234567.*`;
 
   return res.json({ reply: fallbackAdvice });
+});
+
+// 9b. AI Product Suggestions (Description, SEO Meta, Fabric Care, Slug)
+app.post('/api/ai/suggest-product-details', async (req, res) => {
+  const { name, category, fabric, color, gender, stitchType } = req.body;
+  const productName = name || 'Luxury Pakistani Ensemble';
+  const productFabric = fabric || 'Pure Pima Lawn';
+  const productCategory = category || 'Ladies Lawn';
+  const productColor = color || 'Emerald & Gold';
+
+  if (process.env.GEMINI_API_KEY) {
+    try {
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const prompt = `
+You are a luxury e-commerce catalog copywriter for "STITCH & UNSTITCHED", Karachi's premier Pakistani fashion atelier.
+Generate high-converting, opulent product copywriting and SEO metadata in valid JSON format for the following product:
+- Product Name: ${productName}
+- Category: ${productCategory}
+- Fabric: ${productFabric}
+- Color: ${productColor}
+- Gender: ${gender || 'Women'}
+- Stitch Type: ${stitchType || 'Unstitched / Stitched'}
+
+Output MUST be a single raw JSON object (NO markdown backticks, NO markdown formatting) with these exact keys:
+{
+  "description": "Rich 2-3 paragraph couture description highlighting threadwork, Pakistani heritage, Karachi climate suitability, silhouette drape, and styling cues.",
+  "fabricCare": "Precise garment care instructions (dry clean / hand wash in cold water, dry in shade, warm iron).",
+  "metaTitle": "SEO meta title under 60 chars including Karachi brand and fabric keywords",
+  "metaDescription": "Compelling SEO meta description under 155 chars with high click-through appeal and free Karachi delivery mention",
+  "tags": ["array", "of", "6-8", "relevant", "fashion", "keywords"],
+  "suggestedAlt": "Descriptive image alt text for SEO accessibility"
+}
+`;
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+      });
+
+      let rawText = response.text || '';
+      rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+      const parsed = JSON.parse(rawText);
+      return res.json(parsed);
+    } catch (err: any) {
+      console.warn('Gemini product suggestion fallback:', err);
+    }
+  }
+
+  // Graceful rule-based smart generator
+  const baseSlug = (productName + '-' + productFabric).toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  return res.json({
+    description: `Immerse yourself in authentic Karachi couture with ${productName}. Rendered on featherlight ${productFabric} with opulent artisanal motifs, this ensemble captures the vibrant spirit of modern Pakistani celebrations. Tailored for comfort in warm climates while exuding effortless luxury, it features intricate borders and a graceful silhouette suitable for both day festivities and intimate evening soirees.`,
+    fabricCare: `Dry clean recommended for first wash. For subsequent washes, hand wash gently in cold water with mild detergent. Line dry in shade to preserve digital print vibrancy. Iron on reverse side on medium heat.`,
+    metaTitle: `${productName} | ${productFabric} Luxury Karachi Couture`,
+    metaDescription: `Shop authentic ${productName} in ${productFabric}. Premium Pakistani craftsmanship with express delivery across Karachi, Clifton, DHA, and nationwide.`,
+    tags: [
+      productFabric.toLowerCase(),
+      productCategory.toLowerCase(),
+      'karachi fashion',
+      'pakistani couture',
+      'luxury lawn',
+      'festive collection',
+      'stitched unstitched'
+    ],
+    suggestedAlt: `${productName} in ${productFabric} - Luxury Pakistani Couture`
+  });
 });
 
 // Vite Middleware Setup
