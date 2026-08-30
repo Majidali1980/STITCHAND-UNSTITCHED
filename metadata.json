@@ -1,0 +1,8 @@
+{
+  "name": "Stitch & Unstitched - Premium Pakistani Fashion",
+  "description": "Karachi-based premium fashion brand specializing in luxury stitched and unstitched collections, lawn, festive wear, and modern Pakistani apparel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
