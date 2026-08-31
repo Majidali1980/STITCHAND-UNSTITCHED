@@ -1,0 +1,12 @@
+{
+  "previewPort": 3000,
+  "healthPath": "/",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "secrets": [
+    {
+      "name": "GEMINI_API_KEY",
+      "description": "Google Gemini API key for the AI fashion stylist and product suggestion features. The app boots and works without it (graceful fallback), but AI responses will be static placeholders until it is provided. Obtain from Google AI Studio (aistudio.google.com).",
+      "requiredAtBoot": false
+    }
+  ]
+}
