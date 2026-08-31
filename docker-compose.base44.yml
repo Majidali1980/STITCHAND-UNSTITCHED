@@ -1,0 +1,15 @@
+services:
+  web:
+    image: node:22-slim
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./.env.base44-defaults
+      - /run/base44/app.env
+    environment:
+      - NODE_ENV=development
+    command: sh -c "npm install && npx tsx watch server.ts"
+    restart: unless-stopped
