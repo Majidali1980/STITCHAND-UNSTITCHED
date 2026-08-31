@@ -11,6 +11,7 @@ import {
   FooterConfig,
 } from '../types';
 import { api } from '../services/api';
+import { parseUrl, viewToUrl } from '../utils/router';
 
 export interface ToastMessage {
   id: string;
@@ -164,9 +165,10 @@ const DEFAULT_SETTINGS: StoreSettings = {
 };
 
 export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Navigation State
-  const [currentView, setCurrentView] = useState<AppView>('home');
-  const [viewParams, setViewParams] = useState<Record<string, any>>({});
+  // Navigation State — initialized from the current URL for deep-linking
+  const [initialUrl] = useState(() => parseUrl());
+  const [currentView, setCurrentView] = useState<AppView>(initialUrl.view as AppView);
+  const [viewParams, setViewParams] = useState<Record<string, any>>(initialUrl.params);
 
   // Cart & Wishlist persisted in localStorage
   const [cart, setCart] = useState<CartItem[]>(() => {
@@ -223,7 +225,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   // Admin Role State
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(initialUrl.view === 'admin');
   const [adminRole, setAdminRole] = useState<AdminRole>('super_admin');
 
   // Modals
@@ -344,12 +346,26 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setToasts(prev => prev.filter(t => t.id !== id));
   };
 
-  // Navigation
+  // Navigation — syncs the browser URL so pages are deep-linkable and shareable
   const navigate = (view: AppView, params: Record<string, any> = {}) => {
     setCurrentView(view);
     setViewParams(params);
+    const url = viewToUrl(view, params);
+    window.history.pushState({ view, params }, '', url);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  // Handle browser back/forward
+  useEffect(() => {
+    const handlePopState = () => {
+      const { view, params } = parseUrl();
+      setCurrentView(view as AppView);
+      setViewParams(params);
+      setIsAdmin(view === 'admin');
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   // Cart Calculations
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);

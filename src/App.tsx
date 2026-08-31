@@ -60,7 +60,7 @@ const AppContent: React.FC = () => {
       <main className="flex-1 w-full">
         {currentView === 'home' && <HomePage />}
         {currentView === 'shop' && <ShopPage />}
-        {currentView === 'product-detail' && <ProductDetailPage />}
+        {currentView === 'product' && <ProductDetailPage />}
         {currentView === 'cart' && <CartPage />}
         {currentView === 'checkout' && <CheckoutPage />}
         {currentView === 'order-confirmation' && <OrderConfirmationPage />}

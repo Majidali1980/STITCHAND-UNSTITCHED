@@ -64,7 +64,7 @@ interface NavGroup {
 }
 
 export const AdminLayout: React.FC = () => {
-  const { toggleAdminMode, adminRole, setAdminRole, navigate } = useStore();
+  const { toggleAdminMode, adminRole, setAdminRole } = useStore();
   const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
   const [targetOrder, setTargetOrder] = useState<Order | null>(null);
 
@@ -180,10 +180,7 @@ export const AdminLayout: React.FC = () => {
         {/* Bottom Actions */}
         <div className="pt-4 border-t border-[#27272a] space-y-2 mt-4">
           <button
-            onClick={() => {
-              toggleAdminMode(false);
-              navigate('home');
-            }}
+            onClick={() => toggleAdminMode(false)}
             className="w-full flex items-center justify-center gap-2 bg-[#27272a] hover:bg-[#3f3f46] text-white py-2.5 rounded-xl text-xs font-semibold transition-colors"
           >
             <ExternalLink className="w-3.5 h-3.5" />
